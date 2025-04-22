@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/dashboard',
-        name: 'dashboard',
+        name: 'Dashboard',
         component: () => import('../views/dashboard.vue'),
         meta: { requiresAuth: true, title: '个人资料', allowUnaudited: true }
     },
@@ -33,7 +33,161 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/waiting-approval.vue'),
         meta: { requiresAuth: true, title: '等待审核', allowUnaudited: true }
     },
-    // 其他需要审核的页面可以不添加 allowUnaudited: true
+    // 厂家路由
+    {
+        path: '/factory',
+        name: 'FactoryLayout',
+        component: () => import('../views/factory/layout.vue'),
+        meta: { requiresAuth: true, title: '厂家管理', userType: 1 },
+        children: [
+            {
+                path: '',
+                redirect: '/factory/products'
+            },
+            {
+                path: 'products',
+                name: 'FactoryProducts',
+                component: () => import('../views/factory/products.vue'),
+                meta: { title: '产品管理' }
+            },
+            {
+                path: 'add-product',
+                name: 'AddProduct',
+                component: () => import('../views/factory/add-product.vue'),
+                meta: { title: '添加产品' }
+            },
+            {
+                path: 'transfers',
+                name: 'FactoryTransfers',
+                component: () => import('../views/factory/transfers.vue'),
+                meta: { title: '交接记录' }
+            },
+            {
+                path: 'transfer-product',
+                name: 'TransferProduct',
+                component: () => import('../views/factory/transfer-product.vue'),
+                meta: { title: '产品交接' }
+            }
+        ]
+    },
+    // 经销商路由
+    {
+        path: '/saler',
+        name: 'SalerLayout',
+        component: () => import('../views/saler/layout.vue'),
+        meta: { requiresAuth: true, title: '经销商管理', userType: 2 },
+        children: [
+            {
+                path: '',
+                redirect: '/saler/products'
+            },
+            {
+                path: 'products',
+                name: 'SalerProducts',
+                component: () => import('../views/saler/products.vue'),
+                meta: { title: '产品管理' }
+            },
+            {
+                path: 'search',
+                name: 'SearchProducts',
+                component: () => import('../views/saler/search.vue'),
+                meta: { title: '搜索产品' }
+            },
+            {
+                path: 'logistics',
+                name: 'LogisticsRecords',
+                component: () => import('../views/saler/logistics.vue'),
+                meta: { title: '物流记录' }
+            },
+            {
+                path: 'add-logistics',
+                name: 'AddLogistics',
+                component: () => import('../views/saler/add-logistics.vue'),
+                meta: { title: '添加物流' }
+            },
+            {
+                path: 'transfers',
+                name: 'SalerTransfers',
+                component: () => import('../views/saler/transfers.vue'),
+                meta: { title: '交接确认' }
+            }
+        ]
+    },
+    // 监管方/消费者路由
+    {
+        path: '/query',
+        name: 'QueryLayout',
+        component: () => import('../views/query/layout.vue'),
+        meta: { requiresAuth: true, title: '溯源查询', userType: 3 },
+        children: [
+            {
+                path: '',
+                redirect: '/query/search'
+            },
+            {
+                path: 'search',
+                name: 'QuerySearch',
+                component: () => import('../views/query/search.vue'),
+                meta: { title: '溯源查询' }
+            },
+            {
+                path: 'result/:sku',
+                name: 'QueryResult',
+                component: () => import('../views/query/result.vue'),
+                meta: { title: '查询结果' }
+            },
+            {
+                path: 'blockchain/:sku',
+                name: 'BlockchainData',
+                component: () => import('../views/query/blockchain.vue'),
+                meta: { title: '区块链数据' }
+            }
+        ]
+    },
+    // 管理员路由
+    {
+        path: '/admin',
+        name: 'AdminLayout',
+        component: () => import('../views/admin/layout.vue'),
+        meta: { requiresAuth: true, title: '系统管理', userType: 4 },
+        children: [
+            {
+                path: '',
+                redirect: '/admin/dashboard'
+            },
+            {
+                path: 'dashboard',
+                name: 'AdminDashboard',
+                component: () => import('../views/admin/dashboard.vue'),
+                meta: { title: '系统概览' }
+            },
+            {
+                path: 'users',
+                name: 'UserManagement',
+                component: () => import('../views/admin/users.vue'),
+                meta: { title: '用户管理' }
+            },
+            {
+                path: 'products',
+                name: 'ProductManagement',
+                component: () => import('../views/admin/products.vue'),
+                meta: { title: '产品管理' }
+            },
+            {
+                path: 'add-user',
+                name: 'AddUser',
+                component: () => import('../views/admin/add-user.vue'),
+                meta: { title: '添加用户' }
+            }
+        ]
+    },
+    // 404页面
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('../views/not-found.vue'),
+        meta: { requiresAuth: false, title: '页面未找到' }
+    }
 ]
 
 const router = createRouter({
