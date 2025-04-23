@@ -60,29 +60,61 @@ const columns = [
     key: 'username',
   },
   {
-    title: '手机号',
-    dataIndex: 'phone',
-    key: 'phone',
+    title: '联系方式',
+    dataIndex: 'contact',
+    key: 'contact',
+  },
+  {
+    title: '真实姓名',
+    dataIndex: 'real_name',
+    key: 'real_name',
+  },
+  {
+    title: '公司名称',
+    dataIndex: 'company_name',
+    key: 'company_name',
+  },
+  {
+    title: '许可证号',
+    dataIndex: 'license_no',
+    key: 'license_no',
+  },
+  {
+    title: '地址',
+    dataIndex: 'address',
+    key: 'address',
   },
   {
     title: '用户类型',
-    dataIndex: 'userType',
-    key: 'userType',
+    dataIndex: 'user_type',
+    key: 'user_type',
+    customRender: ({ text }) => {
+      const types = {
+        1: '普通用户',
+        2: '企业用户',
+        3: '管理员',
+        4: '系统管理员'
+      };
+      return types[text] || text;
+    }
   },
   {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
+    title: '审核状态',
+    dataIndex: 'audit_status',
+    key: 'audit_status',
+    customRender: ({ text }) => {
+      return text === 1 ? '已审核' : '未审核';
+    }
   },
   {
     title: '创建时间',
-    dataIndex: 'createdAt',
-    key: 'createdAt',
+    dataIndex: 'created_at',
+    key: 'created_at',
   },
   {
     title: '操作',
     key: 'action',
-    slots: { customRender: 'action' },
+    slots: { customRender: 'action' }
   }
 ]
 
@@ -94,9 +126,27 @@ const fetchUserList = async () => {
       page_size: pagination.pageSize,
       search: searchValue.value
     })
-    userList.value = res.data.list
-    pagination.total = res.data.total
-  } catch (error) {
+    console.log('API返回数据:', res) // 调试日志
+    // 检查不同的数据结构可能性
+    if (res && Array.isArray(res.users)) {
+      console.log('用户列表数据(res.users):', res.users) // 调试日志
+      userList.value = res.users
+      pagination.total = res.total || res.users.length
+    } else if (res && Array.isArray(res)) {
+      console.log('用户列表数据(res数组):', res) // 调试日志
+      userList.value = res
+      pagination.total = res.length
+    } else if (res && typeof res === 'object') {
+      console.log('API返回对象结构:', Object.keys(res)) // 调试日志
+      // 尝试找到数组类型的属性作为用户列表
+      const arrayProps = Object.keys(res).filter(key => Array.isArray(res[key]))
+      if (arrayProps.length > 0) {
+        console.log('找到可能的用户列表属性:', arrayProps) // 调试日志
+        userList.value = res[arrayProps[0]]
+        pagination.total = res.total || userList.value.length
+      }
+      }
+    } catch (error) {
     message.error('获取用户列表失败')
   } finally {
     loading.value = false
