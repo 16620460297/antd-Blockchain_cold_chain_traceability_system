@@ -45,14 +45,21 @@ const loading = ref(true)
 onMounted(async () => {
   try {
     const res = await adminApi.getDashboardData()
-    userCount.value = res.data.userCount
-    newUserCount.value = res.data.newUserCount
-    productCount.value = res.data.productCount
-    newProductCount.value = res.data.newProductCount
-    uptime.value = res.data.uptime
-    blockHeight.value = res.data.blockHeight
+    console.log('API响应数据:', res)
+    
+    if (!res) {
+      throw new Error('API返回数据为空')
+    }
+    
+    userCount.value = res.user_stats?.total_users || 0
+    newUserCount.value = res.user_stats?.pending_users || 0
+    productCount.value = res.product_stats?.total_products || 0
+    newProductCount.value = res.product_stats?.pending_products || 0
+    uptime.value = res.blockchain_count || 0
+    blockHeight.value = res.transfer_count || 0
   } catch (error) {
-    message.error('获取仪表盘数据失败')
+    console.error('获取仪表盘数据失败:', error)
+    message.error(`获取仪表盘数据失败: ${error.message}`)
   } finally {
     loading.value = false
   }
