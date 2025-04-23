@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { getAdminDashboardData } from '@/api/admin'
+import { adminApi } from '../../api/admin'
 
 const userCount = ref(0)
 const newUserCount = ref(0)
@@ -44,7 +44,7 @@ const loading = ref(true)
 
 onMounted(async () => {
   try {
-    const res = await getAdminDashboardData()
+    const res = await adminApi.getDashboardData()
     userCount.value = res.data.userCount
     newUserCount.value = res.data.newUserCount
     productCount.value = res.data.productCount

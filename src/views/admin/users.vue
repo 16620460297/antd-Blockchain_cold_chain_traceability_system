@@ -39,7 +39,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { UserAddOutlined } from '@ant-design/icons-vue'
-import { adminApi } from '@/api/admin'
+import { adminApi } from '../../api/admin'
 
 const loading = ref(false)
 const searchValue = ref('')

@@ -11,15 +11,15 @@
         <a-form-item label="用户名" name="username">
           <a-input v-model:value="formState.username" />
         </a-form-item>
-        
+
         <a-form-item label="密码" name="password">
           <a-input-password v-model:value="formState.password" />
         </a-form-item>
-        
+
         <a-form-item label="手机号" name="phone">
           <a-input v-model:value="formState.phone" />
         </a-form-item>
-        
+
         <a-form-item label="用户类型" name="userType">
           <a-select v-model:value="formState.userType">
             <a-select-option value="1">普通用户</a-select-option>
@@ -27,7 +27,7 @@
             <a-select-option value="3">管理员</a-select-option>
           </a-select>
         </a-form-item>
-        
+
         <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
           <a-button type="primary" @click="onSubmit">提交</a-button>
           <a-button style="margin-left: 10px" @click="resetForm">重置</a-button>
@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { message } from 'ant-design-vue'
-import { adminApi } from '@/api/admin'
+import { adminApi } from '../../api/admin'
 
 const formRef = ref()
 
