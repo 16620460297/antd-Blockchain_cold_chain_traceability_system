@@ -20,12 +20,24 @@
           <a-input v-model:value="formState.phone" />
         </a-form-item>
 
-        <a-form-item label="用户类型" name="userType">
-          <a-select v-model:value="formState.userType">
+        <a-form-item label="用户类型" name="UserType">
+          <a-select v-model:value="formState.UserType">
             <a-select-option value="1">普通用户</a-select-option>
             <a-select-option value="2">企业用户</a-select-option>
             <a-select-option value="3">管理员</a-select-option>
           </a-select>
+        </a-form-item>
+        
+        <a-form-item label="真实姓名" name="RealName">
+          <a-input v-model:value="formState.RealName" />
+        </a-form-item>
+        
+        <a-form-item label="地址" name="address">
+          <a-input v-model:value="formState.address" />
+        </a-form-item>
+        
+        <a-form-item label="联系方式" name="contact">
+          <a-input v-model:value="formState.contact" />
         </a-form-item>
 
         <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
@@ -48,7 +60,10 @@ const formState = reactive({
   username: '',
   password: '',
   phone: '',
-  userType: '1'
+  RealName: '',
+  address: '',
+  contact: '',
+  UserType: '1'
 })
 
 const rules = {
@@ -63,6 +78,15 @@ const rules = {
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
+  ],
+  RealName: [
+    { required: true, message: '请输入真实姓名', trigger: 'blur' }
+  ],
+  address: [
+    { required: true, message: '请输入地址', trigger: 'blur' }
+  ],
+  contact: [
+    { required: true, message: '请输入联系方式', trigger: 'blur' }
   ]
 }
 
@@ -71,10 +95,20 @@ const onSubmit = () => {
     .validate()
     .then(async () => {
       try {
-        await adminApi.addUser(formState)
+        const submitData = {
+          username: formState.username,
+          password: formState.password,
+          phone: formState.phone,
+          real_name: formState.RealName,
+          user_type: parseInt(formState.UserType),
+          address: formState.address,
+          contact: formState.contact
+        }
+        await adminApi.addUser(submitData)
         message.success('添加用户成功')
         resetForm()
       } catch (error) {
+        console.error('添加用户失败:', error)
         message.error('添加用户失败')
       }
     })
